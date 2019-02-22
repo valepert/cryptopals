@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npx jest test"
+    "test": "npx jest test --verbose"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^5.14.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
     "jest": "^24.1.0"
   },
   "dependencies": {
