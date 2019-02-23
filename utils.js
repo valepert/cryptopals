@@ -8,6 +8,7 @@ const char2num = (char) => Array.from(Buffer.from(char))
 const readHexStrings = (fileName) => fs.readFileSync(fileName, 'ascii').split('\n')
 const removeTrailNewline = (string) => R.without('\n', string).join('')
 const padding = (string, length) => ''.padStart(length, string)
+const toEightBit = (number) => number.toString(2).padStart(8, 0)
 
 const alphadigits = R.concat(
   R.concat(
@@ -54,6 +55,13 @@ const fitness = (string) =>
       (char) => (R.propOr(MALUS, R.toLower(char), frequencies))
     )(string))
 
+const hamming = (left, right) =>
+  R.sum(
+    R.map(
+      (x) => R.sum(toEightBit(R.head(x) ^ R.tail(x)))
+    )(R.zip(char2num(left), char2num(right)))
+  )
+
 module.exports = {
   hexToBinary,
   binaryToHex,
@@ -62,6 +70,8 @@ module.exports = {
   readHexStrings,
   removeTrailNewline,
   padding,
+  toEightBit,
   alphadigits,
-  fitness
+  fitness,
+  hamming
 }

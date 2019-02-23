@@ -67,6 +67,9 @@ const repeatKeyXor = (key) => (string) =>
     binaryToHex(padding(key, string.length))
   )
 
+// Set 1 / Challenge 6
+// Break repeating-key XOR
+
 module.exports = {
   hex2base64,
   fixedXor,

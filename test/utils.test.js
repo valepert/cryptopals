@@ -1,6 +1,7 @@
 /* global describe, test, expect */
 
-const { hexToBinary, binaryToHex, binaryToString, alphadigits, fitness, char2num, readHexStrings } = require('../utils')
+const { hexToBinary, binaryToHex, char2num, binaryToString } = require('../utils')
+const { alphadigits, fitness, readHexStrings, padding, hamming, toEightBit } = require('../utils')
 
 describe.skip(`test internal Buffer.from behaviour`, () => {
   test('x == binaryToHex(hexToBinary(x)', () => {
@@ -32,4 +33,22 @@ test('readHexStrings', () => {
   expect(
     readHexStrings('./4.txt').length
   ).toBe(327)
+})
+
+test('padding', () => {
+  expect(
+    padding('PADDING', 15)
+  ).toBe('PADDINGPADDINGP')
+})
+
+test('toEightBit', () => {
+  expect(
+    toEightBit(64 - 1)
+  ).toBe('00111111')
+})
+
+test('hamming', () => {
+  expect(
+    hamming('this is a test', 'wokka wokka!!!')
+  ).toBe(37)
 })
