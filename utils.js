@@ -6,6 +6,16 @@ const binaryToHex = (binary) => Buffer.from(binary).toString('hex')
 const binaryToString = (binary) => Buffer.from(binary).toString()
 const char2num = (char) => Array.from(Buffer.from(char))
 const readHexStrings = (fileName) => fs.readFileSync(fileName, 'ascii').split('\n')
+const removeTrailNewline = (string) => R.without('\n', string).join('')
+
+const alphadigits = R.concat(
+  R.concat(
+    R.range('A'.charCodeAt(0), 'Z'.charCodeAt(0) + 1),
+    R.range('a'.charCodeAt(0), 'z'.charCodeAt(0) + 1)
+  ),
+  R.range('0'.charCodeAt(0), '9'.charCodeAt(0) + 1))
+
+const MALUS = -1
 
 const frequencies = {
   a: 8.167,
@@ -40,7 +50,7 @@ const frequencies = {
 const fitness = (string) =>
   R.sum(
     R.map(
-      (char) => (R.propOr(-4, R.toLower(char), frequencies))
+      (char) => (R.propOr(MALUS, R.toLower(char), frequencies))
     )(string))
 
 module.exports = {
@@ -48,6 +58,8 @@ module.exports = {
   binaryToHex,
   binaryToString,
   char2num,
-  fitness,
-  readHexStrings
+  readHexStrings,
+  removeTrailNewline,
+  alphadigits,
+  fitness
 }
