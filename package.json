@@ -1,12 +1,12 @@
 {
   "name": "cryptopals",
   "version": "1.0.0",
-  "description": "Solving the cryptopals crytpo challanges",
+  "description": "Solving the cryptopals crypto challenges",
   "main": "index.js",
   "scripts": {
     "test": "npx jest test --verbose"
   },
-  "author": "",
+  "author": "valepert",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^5.14.1",
