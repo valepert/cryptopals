@@ -1,6 +1,6 @@
 const R = require('ramda')
 
-const { binaryToHex, hexToBinary, binaryToString, readHexStrings, removeTrailNewline } = require('./utils')
+const { binaryToHex, hexToBinary, binaryToString, readHexStrings, removeTrailNewline, padding } = require('./utils')
 const { alphadigits, fitness } = require('./utils')
 
 const hexPairXOR = (left, right) =>
@@ -59,9 +59,18 @@ const detectCharXor = (fileName) =>
     )
   )
 
+// Set 1 / Challenge 5
+// Implement repeating-key XOR
+const repeatKeyXor = (key) => (string) =>
+  fixedXor(
+    binaryToHex(string),
+    binaryToHex(padding(key, string.length))
+  )
+
 module.exports = {
   hex2base64,
   fixedXor,
   singleByteXor,
-  detectCharXor
+  detectCharXor,
+  repeatKeyXor
 }

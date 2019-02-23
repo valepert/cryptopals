@@ -1,5 +1,5 @@
 /* global test, expect */
-const { hex2base64, fixedXor, singleByteXor, detectCharXor } = require('../index')
+const { hex2base64, fixedXor, singleByteXor, detectCharXor, repeatKeyXor } = require('../index')
 
 test('Convert hex to base64', () => {
   expect(
@@ -23,4 +23,13 @@ test('Detect single-character XOR', () => {
   expect(
     detectCharXor('4.txt')
   ).toBe('Now that the party is jumping')
+})
+
+test('Implement repeating-key XOR', () => {
+  expect(
+    repeatKeyXor('ICE')(
+      'Burning \'em, if you ain\'t quick and nimble\nI go crazy when I hear a cymbal'
+    )).toBe(
+    '0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f'
+  )
 })

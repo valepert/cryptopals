@@ -7,6 +7,7 @@ const binaryToString = (binary) => Buffer.from(binary).toString()
 const char2num = (char) => Array.from(Buffer.from(char))
 const readHexStrings = (fileName) => fs.readFileSync(fileName, 'ascii').split('\n')
 const removeTrailNewline = (string) => R.without('\n', string).join('')
+const padding = (string, length) => ''.padStart(length, string)
 
 const alphadigits = R.concat(
   R.concat(
@@ -60,6 +61,7 @@ module.exports = {
   char2num,
   readHexStrings,
   removeTrailNewline,
+  padding,
   alphadigits,
   fitness
 }
