@@ -1,5 +1,5 @@
 /* global test, expect */
-const { hex2base64, fixedXor, singleByteXor, detectCharXor, repeatKeyXor } = require('../index')
+const { hex2base64, fixedXor, singleByteXor, detectCharXor, repeatKeyXor, findKeySize, breakCode } = require('../index')
 
 test('Convert hex to base64', () => {
   expect(
@@ -34,6 +34,9 @@ test('Implement repeating-key XOR', () => {
   )
 })
 
-test.skip('Break repeating-key XOR', () => {
-  expect.hasAssertions()
+test('Break repeating-key XOR', () => {
+  const KEYSIZE = findKeySize('6.txt', 2, 40)
+  expect(KEYSIZE).toBe(29)
+
+  expect(breakCode('6.txt')(KEYSIZE)).toBe()
 })

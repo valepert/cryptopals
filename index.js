@@ -1,7 +1,7 @@
 const R = require('ramda')
 
 const { binaryToHex, hexToBinary, binaryToString, readHexStrings, removeTrailNewline, padding } = require('./utils')
-const { alphadigits, fitness } = require('./utils')
+const { alphadigits, fitness, hamming } = require('./utils')
 
 const hexPairXOR = (left, right) =>
   R.map(
@@ -59,6 +59,14 @@ const detectCharXor = (fileName) =>
     )
   )
 
+const detectCharXor2 = (strings) =>
+  R.prop('output',
+    getMaxFitness(
+      R.pipe(
+        R.map((x) => (charXor(x))),
+        R.map((x) => (R.propOr('', 'output', x)))
+      )(strings)))
+
 // Set 1 / Challenge 5
 // Implement repeating-key XOR
 const repeatKeyXor = (key) => (string) =>
@@ -69,11 +77,47 @@ const repeatKeyXor = (key) => (string) =>
 
 // Set 1 / Challenge 6
 // Break repeating-key XOR
+const testKeySize = (string) => (keysize) => (
+  {
+    keysize,
+    avg_distance: R.mean(
+      R.map(
+        (x) => hamming(R.head(x), R.last(x)) / keysize,
+        R.splitEvery(2, string)
+      )
+    )
+  }
+)
+
+const base64toString = (string) => Buffer.from(string, 'base64').toString()
+const base64 = (string) => Buffer.from(string, 'base64')
+
+const findKeySize = (fileName, min, max) =>
+  R.prop('keysize',
+    R.reduce(
+      R.minBy(R.prop('avg_distance')), { 'avg_distance': +Infinity },
+      R.map(
+        (ks) => (testKeySize(R.splitEvery(ks, base64toString(R.reduce(R.concat, '', readHexStrings(fileName)))))(ks))
+      )(R.range(min, max + 1))
+    )
+  )
+
+// TODO:
+const breakCode = (fileName) => (keysize) => (
+  R.map(
+    (x) => bruteForceXor(x)
+  )(R.transpose(
+    R.splitEvery(keysize, base64(R.reduce(R.concat, '', readHexStrings(fileName))))
+  )
+  )
+)
 
 module.exports = {
   hex2base64,
   fixedXor,
   singleByteXor,
   detectCharXor,
-  repeatKeyXor
+  repeatKeyXor,
+  findKeySize,
+  breakCode
 }
