@@ -1,24 +1,39 @@
 /* global describe, test, expect */
+const hello = require('./hello')
+const xor = require('./xor')
+const brute = require('./brute')
+const utils = require('../utils')
 
-const { hexToBinary, binaryToHex, char2num, binaryToString } = require('../utils')
-const { alphadigits, fitness, readHexStrings, padding, hamming, toEightBit } = require('../utils')
+const { fitness } = require('../fitness')
 
-describe.skip(`test internal Buffer.from behaviour`, () => {
-  test('x == binaryToHex(hexToBinary(x)', () => {
-    expect(
-      binaryToHex(hexToBinary('6c2c4f676953959d64e63b007c263d7085852968'))
-    ).toBe('6c2c4f676953959d64e63b007c263d7085852968')
+describe.skip('Buffer behaviour', () => {
+  test('Hello World', () => {
+    expect(utils.stringToArray(hello.string)).toEqual(hello.array)
+    expect(utils.arrayToString(hello.array)).toEqual(hello.string)
   })
 
-  test('char2num', () => {
-    expect(char2num('AZ-az')).toEqual([65, 90, 45, 97, 122])
+  test('hexadecimal', () => {
+    expect(utils.stringToHex(hello.string)).toEqual(hello.hex)
+    expect(utils.hexToString(hello.hex)).toEqual(hello.string)
+  })
+
+  test('base64', () => {
+    expect(utils.encode(hello.array)).toEqual(hello.base64)
+    expect(utils.decode(hello.base64)).toEqual(hello.array)
   })
 })
 
+test('XOR', () => {
+  expect(utils.xor(xor.left, xor.right)).toEqual(xor.result)
+  expect(utils.pairXor(xor.pair)).toEqual(xor.result)
+})
+
+test('Bruteforce', () => {
+  expect(utils.bruteforce(brute.mulPlusOne, brute.fix, brute.vars)).toEqual(brute.result)
+})
+
 test('alphabet and digits', () => {
-  expect(
-    binaryToString(alphadigits)
-  ).toEqual('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789')
+  expect(utils.alphadigits).toEqual('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz')
 })
 
 test('fitness function', () => {
@@ -29,26 +44,18 @@ test('fitness function', () => {
   )
 })
 
-test('readHexStrings', () => {
-  expect(
-    readHexStrings('./4.txt').length
-  ).toBe(327)
-})
-
 test('padding', () => {
   expect(
-    padding('PADDING', 15)
+    utils.padding('PADDING', 15)
   ).toBe('PADDINGPADDINGP')
 })
 
-test('toEightBit', () => {
-  expect(
-    toEightBit(64 - 1)
-  ).toBe('00111111')
-})
-
 test('hamming', () => {
-  expect(
-    hamming('this is a test', 'wokka wokka!!!')
-  ).toBe(37)
+  expect(utils.toEightBits(xor.left)).toBe(xor.leftBinary)
+  expect(utils.toEightBits(xor.right)).toBe(xor.rightBinary)
+  expect(utils.toEightBits(xor.result)).toBe(xor.resultBinary)
+
+  expect(utils.hamming('this is a test', 'wokka wokka!!!')).toBe(37)
+
+  expect(utils.hammingPair(['this is a test', 'wokka wokka!!!'])).toBe(37)
 })

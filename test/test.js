@@ -1,5 +1,5 @@
-/* global test, expect */
-const { hex2base64, fixedXor, singleByteXor, detectCharXor, repeatKeyXor, findKeySize, breakCode } = require('../index')
+/* global describe, test, expect */
+const { hex2base64, fixedXor, findCharacterXor, decryptMessage, detectCharXor, repeatKeyXor, findKeySize, breakCode } = require('../index')
 
 test('Convert hex to base64', () => {
   expect(
@@ -13,10 +13,18 @@ test('Fixed XOR', () => {
   ).toBe('746865206b696420646f6e277420706c6179')
 })
 
-test('Single-byte XOR cipher', () => {
-  expect(
-    singleByteXor('1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736')
-  ).toBe('Cooking MC\'s like a pound of bacon')
+describe('Single-byte XOR cipher', () => {
+  test('Find the character XOR\'d', () => {
+    expect(
+      findCharacterXor('1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736')
+    ).toBe('X')
+  })
+
+  test('Decrypt the message', () => {
+    expect(
+      decryptMessage('1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736')
+    ).toBe('Cooking MC\'s like a pound of bacon')
+  })
 })
 
 test('Detect single-character XOR', () => {
@@ -38,5 +46,5 @@ test('Break repeating-key XOR', () => {
   const KEYSIZE = findKeySize('6.txt', 2, 40)
   expect(KEYSIZE).toBe(29)
 
-  expect(breakCode('6.txt')(KEYSIZE)).toBe()
+  // expect(breakCode('6.txt')(KEYSIZE)).toBe()
 })

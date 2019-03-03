@@ -1,77 +1,87 @@
 const fs = require('fs')
 const R = require('ramda')
 
-const hexToBinary = (hex) => Buffer.from(hex, 'hex')
-const binaryToHex = (binary) => Buffer.from(binary).toString('hex')
-const binaryToString = (binary) => Buffer.from(binary).toString()
-const char2num = (char) => Array.from(Buffer.from(char))
-const readHexStrings = (fileName) => fs.readFileSync(fileName, 'ascii').split('\n')
+const readLines = (fileName) => fs.readFileSync(fileName, 'ascii').split('\n')
 const removeTrailNewline = (string) => R.without('\n', string).join('')
+
+const arrayToString = (array) => Buffer.from(array).toString('ascii')
+const stringToArray = (string) => Array.from(Buffer.from(string))
+
+const hexToString = (hex) => Buffer.from(hex, 'hex').toString()
+const stringToHex = (string) => Buffer.from(string).toString('hex')
+
+const hexToArray = (hex) =>
+  R.pipe(
+    hexToString,
+    stringToArray
+  )(hex)
+
+const arrayToHex = (array) =>
+  R.pipe(
+    arrayToString,
+    stringToHex
+  )(array)
+
+// Base 64
+const decode = (base64) => Array.from(Buffer.from(base64, 'base64'))
+const encode = (array) => Buffer.from(array).toString('base64')
+
+// XOR
+const xor = (left, right) => (left ^ right)
+const pairXor = (pair) => xor(R.head(pair), R.tail(pair))
+
+const bruteforce = (f, fixed, variables) => R.map(f(fixed))(variables)
+const numSort = (a, b) => (a - b)
 const padding = (string, length) => ''.padStart(length, string)
-const toEightBit = (number) => number.toString(2).padStart(8, 0)
 
-const alphadigits = R.concat(
-  R.concat(
-    R.range('A'.charCodeAt(0), 'Z'.charCodeAt(0) + 1),
-    R.range('a'.charCodeAt(0), 'z'.charCodeAt(0) + 1)
-  ),
-  R.range('0'.charCodeAt(0), '9'.charCodeAt(0) + 1))
+// alphabet & digits
+const lowercase = R.range('a'.charCodeAt(0), 'z'.charCodeAt(0) + 1)
+const uppercase = R.range('A'.charCodeAt(0), 'Z'.charCodeAt(0) + 1)
+const digits = R.range('0'.charCodeAt(0), '9'.charCodeAt(0) + 1)
+const alphabet = R.concat(R.concat(lowercase, uppercase), digits)
+const alphadigits = arrayToString(alphabet.sort(numSort))
 
-const MALUS = -1
+const findMaxByProp = (property) => R.reduce(
+  R.maxBy(R.propOr(0, property)),
+  { property: 0 }
+)
 
-const frequencies = {
-  a: 8.167,
-  b: 1.492,
-  c: 2.782,
-  d: 4.253,
-  e: 12.702,
-  f: 2.228,
-  g: 2.015,
-  h: 6.094,
-  i: 6.966,
-  j: 0.153,
-  k: 0.772,
-  l: 4.025,
-  m: 2.406,
-  n: 6.749,
-  o: 7.507,
-  p: 1.929,
-  q: 0.095,
-  r: 5.987,
-  s: 6.327,
-  t: 9.056,
-  u: 2.758,
-  v: 0.978,
-  w: 2.360,
-  x: 0.150,
-  y: 1.974,
-  z: 0.074,
-  ' ': 16.000
-}
+const findMinByProp = (property) => R.reduce(
+  R.minBy(R.propOr(+Infinity, property)),
+  { property: +Infinity }
+)
 
-const fitness = (string) =>
-  R.sum(
-    R.map(
-      (char) => (R.propOr(MALUS, R.toLower(char), frequencies))
-    )(string))
-
+// hamming
+const toEightBits = (number) => number.toString(2).padStart(8, 0)
 const hamming = (left, right) =>
   R.sum(
     R.map(
-      (x) => R.sum(toEightBit(R.head(x) ^ R.tail(x)))
-    )(R.zip(char2num(left), char2num(right)))
+      R.pipe(pairXor, toEightBits, R.sum),
+      R.zip(stringToArray(left), stringToArray(right))
+    )
   )
+const hammingPair = (pair) => hamming(R.head(pair), R.last(pair))
 
 module.exports = {
-  hexToBinary,
-  binaryToHex,
-  binaryToString,
-  char2num,
-  readHexStrings,
+  readLines,
   removeTrailNewline,
-  padding,
-  toEightBit,
+  arrayToString,
+  stringToArray,
+  hexToString,
+  stringToHex,
+  hexToArray,
+  arrayToHex,
+  decode,
+  encode,
+  xor,
+  pairXor,
+  bruteforce,
+  alphabet,
   alphadigits,
-  fitness,
-  hamming
+  findMaxByProp,
+  findMinByProp,
+  padding,
+  toEightBits,
+  hamming,
+  hammingPair
 }
