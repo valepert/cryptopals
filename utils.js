@@ -64,6 +64,12 @@ const hamming = (left, right) =>
   )
 const hammingPair = (pair) => hamming(R.head(pair), R.last(pair))
 
+const pkcs7 = (block, length) =>
+  R.concat(
+    block,
+    R.repeat((length - block.length), length - block.length)
+  )
+
 module.exports = {
   readLines,
   removeTrailNewline,
@@ -85,5 +91,6 @@ module.exports = {
   padding,
   toEightBits,
   hamming,
-  hammingPair
+  hammingPair,
+  pkcs7
 }

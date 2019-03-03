@@ -28,7 +28,7 @@ test('XOR', () => {
   expect(utils.pairXor(xor.pair)).toEqual(xor.result)
 })
 
-test('Bruteforce', () => {
+test('bruteforce', () => {
   expect(utils.bruteforce(brute.mulPlusOne, brute.fix, brute.vars)).toEqual(brute.result)
 })
 
@@ -58,4 +58,13 @@ test('hamming', () => {
   expect(utils.hamming('this is a test', 'wokka wokka!!!')).toBe(37)
 
   expect(utils.hammingPair(['this is a test', 'wokka wokka!!!'])).toBe(37)
+})
+
+test.each`
+  block         | padding | result
+  ${[1, 2, 3]}  | ${5}    | ${[1, 2, 3, 2, 2]}
+  ${[1, 2]}     | ${2}    | ${[1, 2]}
+  ${[1]}        | ${4}    | ${[1, 3, 3, 3]}
+`('pkcs7', ({ block, padding, result }) => {
+  expect(utils.pkcs7(block, padding)).toEqual(result)
 })
