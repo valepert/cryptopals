@@ -1,3 +1,4 @@
+const crypto = require('crypto')
 const fs = require('fs')
 const R = require('ramda')
 
@@ -70,6 +71,11 @@ const pkcs7 = (block, length) =>
     R.repeat((length - block.length), length - block.length)
   )
 
+const AESinECB = (key) => (text) =>
+  R.pipe(
+    (dec) => { let r = dec.update(text, 'base64'); r += dec.final(); return r }
+  )(crypto.createDecipheriv('aes-128-ecb', key, null))
+
 module.exports = {
   readLines,
   removeTrailNewline,
@@ -92,5 +98,6 @@ module.exports = {
   toEightBits,
   hamming,
   hammingPair,
-  pkcs7
+  pkcs7,
+  AESinECB
 }

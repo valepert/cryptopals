@@ -117,6 +117,12 @@ const breakCode = (fileName) => (keysize) =>
       R.pipe(utils.arrayToHex, findCharacterXor)
     )(R.transpose(R.splitEvery(keysize, utils.decode(R.join('', utils.readLines(fileName)))))))
 
+// Set 2 / Challenge 7
+const aes = (fileName, key) =>
+  R.pipe(
+    utils.AESinECB(key)
+  )(R.join('', utils.readLines(fileName)))
+
 // Set 2 / Challenge 9
 // Implement PKCS#7 padding
 const pkcs7padding = (string, length) =>
@@ -131,5 +137,6 @@ module.exports = {
   repeatKeyXor,
   findKeySize,
   breakCode,
-  pkcs7padding
+  pkcs7padding,
+  aes
 }

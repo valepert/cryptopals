@@ -1,6 +1,8 @@
 /* global describe, test, expect */
-const { hex2base64, fixedXor, findCharacterXor, decryptMessage, detectCharXor, repeatKeyXor, findKeySize, breakCode } = require('../index') // Set 1
+const { hex2base64, fixedXor, findCharacterXor, decryptMessage, detectCharXor, repeatKeyXor, findKeySize, breakCode, aes } = require('../index') // Set 1
 const { pkcs7padding } = require('../index') // Set 2
+
+const { expected } = require('./aes')
 
 describe('Set 1', () => {
   test('Convert hex to base64', () => {
@@ -49,6 +51,10 @@ describe('Set 1', () => {
     expect(KEYSIZE).toBe(29)
 
     expect(breakCode('6.txt')(KEYSIZE)).toBe('Terminator X: Bring the noise')
+  })
+
+  test('AES in ECB mode', () => {
+    expect(aes('7.txt', 'YELLOW SUBMARINE')).toEqual(expected)
   })
 })
 
