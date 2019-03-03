@@ -46,5 +46,5 @@ test('Break repeating-key XOR', () => {
   const KEYSIZE = findKeySize('6.txt', 2, 40)
   expect(KEYSIZE).toBe(29)
 
-  // expect(breakCode('6.txt')(KEYSIZE)).toBe()
+  expect(breakCode('6.txt')(KEYSIZE)).toBe('Terminator X: Bring the noise')
 })

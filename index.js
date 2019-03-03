@@ -63,7 +63,7 @@ const decryptMessage = (string) =>
     )
   )
 
-// Set 1 // Challenge 4
+// Set 1 / Challenge 4
 // Detect single-character XOR
 const detectCharXor = (fileName) =>
   utils.removeTrailNewline(
@@ -83,7 +83,7 @@ const detectCharXor = (fileName) =>
     )
   )
 
-// Set 1 // Challenge 5
+// Set 1 / Challenge 5
 // Implement repeating-key XOR
 const repeatKeyXor = (key) => (string) =>
   fixedXor(
@@ -101,17 +101,21 @@ const testKeySize = (block) => (keysize) => ({
   )
 })
 
-// Set 1 // Challenge 6
+// Set 1 / Challenge 6
 const findKeySize = (fileName, min, max) =>
   R.prop('keysize')(
     utils.findMinByProp('distance')(
       R.map(
-        (ks) => testKeySize(R.splitEvery(ks, utils.decode(R.reduce(R.concat, '', utils.readLines(fileName)))))(ks)
+        (ks) => testKeySize(R.splitEvery(ks, utils.decode(R.join('', utils.readLines(fileName)))))(ks)
       )(R.range(min, max + 1))
     )
   )
-// TODO: breakCode
-const breakCode = (fileName) => (keysize) => {}
+
+const breakCode = (fileName) => (keysize) =>
+  R.join('',
+    R.map(
+      R.pipe(utils.arrayToHex, findCharacterXor)
+    )(R.transpose(R.splitEvery(keysize, utils.decode(R.join('', utils.readLines(fileName)))))))
 
 module.exports = {
   hex2base64,
@@ -120,5 +124,6 @@ module.exports = {
   decryptMessage,
   detectCharXor,
   repeatKeyXor,
-  findKeySize
+  findKeySize,
+  breakCode
 }

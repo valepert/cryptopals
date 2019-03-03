@@ -38,7 +38,9 @@ const padding = (string, length) => ''.padStart(length, string)
 const lowercase = R.range('a'.charCodeAt(0), 'z'.charCodeAt(0) + 1)
 const uppercase = R.range('A'.charCodeAt(0), 'Z'.charCodeAt(0) + 1)
 const digits = R.range('0'.charCodeAt(0), '9'.charCodeAt(0) + 1)
-const alphabet = R.concat(R.concat(lowercase, uppercase), digits)
+const space = ' '.charCodeAt(0)
+const colon = ':'.charCodeAt(0)
+const alphabet = R.concat(R.concat(lowercase, uppercase), R.concat(digits, [space, colon]))
 const alphadigits = arrayToString(alphabet.sort(numSort))
 
 const findMaxByProp = (property) => R.reduce(

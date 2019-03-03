@@ -32,8 +32,8 @@ test('Bruteforce', () => {
   expect(utils.bruteforce(brute.mulPlusOne, brute.fix, brute.vars)).toEqual(brute.result)
 })
 
-test('alphabet and digits', () => {
-  expect(utils.alphadigits).toEqual('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz')
+test('alphabet & co.', () => {
+  expect(utils.alphadigits).toEqual(' 0123456789:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz')
 })
 
 test('fitness function', () => {
