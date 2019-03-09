@@ -1,5 +1,5 @@
 /* global describe, test, expect */
-const { hex2base64, fixedXor, findCharacterXor, decryptMessage, detectCharXor, repeatKeyXor, findKeySize, breakCode, aes } = require('../index') // Set 1
+const { hex2base64, fixedXor, findCharacterXor, decryptMessage, detectCharXor, repeatKeyXor, findKeySize, breakCode, aes, detectAes } = require('../index') // Set 1
 const { pkcs7padding } = require('../index') // Set 2
 
 const { expected } = require('./aes')
@@ -55,6 +55,10 @@ describe('Set 1', () => {
 
   test('AES in ECB mode', () => {
     expect(aes('7.txt', 'YELLOW SUBMARINE')).toEqual(expected)
+  })
+
+  test('Detect AES in ECB mode', () => {
+    expect(detectAes('8.txt')).toBeDefined()
   })
 })
 
